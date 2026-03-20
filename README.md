@@ -1,16 +1,40 @@
-# React + Vite
+# SMART Practitioner App - Cerner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A SMART on FHIR practitioner-facing application built with React + Vite that integrates with the Cerner (Oracle Health) EHR via EHR Launch.
 
-Currently, two official plugins are available:
+## What It Does
+- Initiates EHR Launch flow automatically when opened from Cerner
+- Completes full OAuth2 Authorization Code Flow with launch token
+- Displays Patient Banner with demographics from FHIR Patient resource
+- Lists patient vital signs from FHIR Observation resources
+- Writes new temperature observations back to Cerner's FHIR server
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- React + Vite
+- SMART on FHIR v1
+- OAuth2 Authorization Code Flow with EHR Launch
+- Cerner Millennium FHIR R4 API
+- LOINC codes for vital sign observations
 
-## React Compiler
+## Key Concepts Demonstrated
+- EHR Launch vs Standalone Launch
+- Dynamic SMART configuration discovery via `.well-known/smart-configuration`
+- Launch token binding for patient/encounter context
+- CSRF protection via state parameter validation
+- Bidirectional FHIR data flow (read + write Observations)
+- sessionStorage for auth state persistence across redirects
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Setup
+1. Register app at [Cerner Code Console](https://code-console.cerner.com)
+2. Clone repo and run `npm install`
+3. Create `.env` file:
+```
+VITE_CLIENT_ID=your_client_id
+VITE_REDIRECT_URI=http://localhost:5173
+```
+4. Run `npm run dev`
+5. Launch from Cerner Code Console Test Sandbox
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## FHIR Resources Used
+- `Patient` - read patient demographics
+- `Observation` - read and write vital signs (LOINC 8331-1 oral temperature)
