@@ -1,0 +1,307 @@
+{
+  "info": {
+    "_postman_id": "a073cb6e-d43b-4521-9fce-dfe92f8c5d53",
+    "name": "Cerner SMART EHR Launch",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52513888",
+    "_collection_link": "https://go.postman.co/collection/52513888-a073cb6e-d43b-4521-9fce-dfe92f8c5d53?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1 - GET SMART Configuration",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/.well-known/smart-configuration",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            ".well-known",
+            "smart-configuration"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2 - GET Authorization URL (Browser Redirect)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://authorization.cerner.com/tenants/ec2458f2-1e24-41c8-b71b-0e701af7583d/protocols/oauth2/profiles/smart-v1/personas/provider/authorize?response_type=code&client_id={{client_id}}&redirect_uri={{redirect_uri}}&scope=launch openid fhirUser offline_access user/Patient.read user/Observation.read user/Observation.write&aud={{base_url}}",
+          "protocol": "https",
+          "host": [
+            "authorization",
+            "cerner",
+            "com"
+          ],
+          "path": [
+            "tenants",
+            "ec2458f2-1e24-41c8-b71b-0e701af7583d",
+            "protocols",
+            "oauth2",
+            "profiles",
+            "smart-v1",
+            "personas",
+            "provider",
+            "authorize"
+          ],
+          "query": [
+            {
+              "key": "response_type",
+              "value": "code"
+            },
+            {
+              "key": "client_id",
+              "value": "{{client_id}}"
+            },
+            {
+              "key": "redirect_uri",
+              "value": "{{redirect_uri}}"
+            },
+            {
+              "key": "scope",
+              "value": "launch openid fhirUser offline_access user/Patient.read user/Observation.read user/Observation.write"
+            },
+            {
+              "key": "aud",
+              "value": "{{base_url}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3 - POST Token Exchange",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "authorization_code",
+              "type": "text",
+              "uuid": "6563da34-755d-4e44-9f50-a73cd2f36546"
+            },
+            {
+              "key": "code",
+              "value": "{{auth_code}}",
+              "type": "text",
+              "uuid": "9165ef9e-ab3d-4008-b94c-e10b60d1999f"
+            },
+            {
+              "key": "redirect_uri",
+              "value": "{{redirect_uri}}",
+              "type": "text",
+              "uuid": "d66174ba-241d-4c8f-9942-944b821dc2ec"
+            },
+            {
+              "key": "client_id",
+              "value": "{{client_id}}",
+              "type": "text",
+              "uuid": "7703c5d9-c726-4329-8849-c8a21f606d31"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://authorization.cerner.com/tenants/ec2458f2-1e24-41c8-b71b-0e701af7583d/protocols/oauth2/profiles/smart-v1/token",
+          "protocol": "https",
+          "host": [
+            "authorization",
+            "cerner",
+            "com"
+          ],
+          "path": [
+            "tenants",
+            "ec2458f2-1e24-41c8-b71b-0e701af7583d",
+            "protocols",
+            "oauth2",
+            "profiles",
+            "smart-v1",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4 - GET Patient",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "accept": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/fhir+json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/Patient/12724067",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "Patient",
+            "12724067"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5 - GET Vital Signs",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "accept": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/fhir+json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/Observation?patient=12724067&category=vital-signs&_sort=-date&_count=20",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "Observation"
+          ],
+          "query": [
+            {
+              "key": "patient",
+              "value": "12724067",
+              "type": "text"
+            },
+            {
+              "key": "category",
+              "value": "vital-signs",
+              "type": "text"
+            },
+            {
+              "key": "_sort",
+              "value": "-date",
+              "type": "text"
+            },
+            {
+              "key": "_count",
+              "value": "20",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6 - POST Observation (Temp)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/fhir+json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/fhir+json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"resourceType\": \"Observation\",\r\n  \"status\": \"final\",\r\n  \"category\": [{\r\n    \"coding\": [{\r\n      \"system\": \"http://terminology.hl7.org/CodeSystem/observation-category\",\r\n      \"code\": \"vital-signs\",\r\n      \"display\": \"Vital Signs\"\r\n    }]\r\n  }],\r\n  \"code\": {\r\n    \"coding\": [{\r\n      \"system\": \"http://loinc.org\",\r\n      \"code\": \"8331-1\",\r\n      \"display\": \"Oral temperature\"\r\n    }],\r\n    \"text\": \"Oral temperature\"\r\n  },\r\n  \"subject\": {\r\n    \"reference\": \"Patient/12724067\"\r\n  },\r\n  \"encounter\": {\r\n    \"reference\": \"Encounter/97953480\"\r\n  },\r\n  \"effectiveDateTime\": \"2026-03-20T10:00:00Z\",\r\n  \"valueQuantity\": {\r\n    \"value\": 37.5,\r\n    \"unit\": \"degC\",\r\n    \"system\": \"http://unitsofmeasure.org\",\r\n    \"code\": \"Cel\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/Observation",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "Observation"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "client_id",
+      "value": ""
+    },
+    {
+      "key": "redirect_uri",
+      "value": ""
+    },
+    {
+      "key": "patient_id",
+      "value": ""
+    }
+  ]
+}
