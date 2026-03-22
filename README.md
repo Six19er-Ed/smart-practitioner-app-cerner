@@ -38,3 +38,9 @@ VITE_REDIRECT_URI=http://localhost:5173
 ## FHIR Resources Used
 - `Patient` - read patient demographics
 - `Observation` - read and write vital signs (LOINC 8331-1 oral temperature)
+
+## Postman Collection
+A full Postman collection documenting the Cerner EHR Launch OAuth2 flow and all FHIR API requests is available in the `/postman` folder. Covers SMART configuration discovery, token exchange, GET Patient, GET Observations, and POST Observation.
+
+## Part of
+Medblocks FHIR Bootcamp — Module 3
